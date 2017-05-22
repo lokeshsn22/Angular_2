@@ -5,16 +5,16 @@
 	<div class="panel-body">
 		<div class="row">
 			<div class="col-md-2"> Filter By : </div>
-			<div class="col-md-4"> <input type="text" [(ngModel)] = 'listFilter' /> 
+			<div class="col-md-4"> <input type="text" [(ngModel)]='listFilter' />
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-6"> Filtered By : {{ listFilter }}</div>
+			<div class="col-md-6"> Filtered By : {{ listFilter }} </div>
 		</div>
 	</div>
 
 	<div class='table-responsive'>
-		<table class="table" *ngIf="products && products.length">
+		<table class="table" *ngIf="products && products.length | productFilter">
 			<thead>
 				<tr>
 					<th>
@@ -28,19 +28,19 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr *ngFor=" let product of products">
+				<tr *ngFor=" let product of products | productFilter:listFilter">
 					<td>
-						<img 
-						*ngIf='showImage'
-						[src]='product.imageUrl' [title]='product.productName'
-						[style.width.px] = 'imageWidth' 
-						[style.margin.px] = 'imageMargin'> 
+						<img *ngIf='showImage' [src]='product.imageUrl' [title]='product.productName' [style.width.px]='imageWidth' [style.margin.px]='imageMargin'>
 					</td>
 					<td>{{ product.productName }}</td>
-					<td>{{ product.productCode }}</td>
+					<td>{{ product.productCode | lowercase }}</td>
 					<td>{{ product.releaseDate }}</td>
-					<td>${{ product.price }}</td>
-					<td>{{ product.starRating }}</td>
+					<td>{{ product.price | currency:'USD':'true':'1.2-2' }}</td>
+					<td>
+						<ai-star [rating]='product.starRating' 
+						        (ratingClicked)='onRatingClicked($event)'>
+						</ai-star>
+					</td>
 				</tr>
 			</tbody>
 		</table>
